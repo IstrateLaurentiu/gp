@@ -13,7 +13,7 @@ const userRepository = new UserRepository(UserModel);
 
 authRouter.get("/", authMiddleware, async (req: Request, res: Response) => {
   try {
-    const user = await userRepository.findOne(req.user?.id,"-password");
+    const user = await userRepository.findOne(req.user?.id, "-password");
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
@@ -29,7 +29,7 @@ authRouter.post("/", loginSchema, async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
-    let user = await userRepository.findOneByCondition({email});
+    let user = await userRepository.findOneByCondition({ email });
     const isMatch = await bycrypt.compare(password, user?.password!);
     if (!user || !isMatch) {
       return res.status(400).json({ errors: [{ msg: "Invalid credentials" }] });
@@ -47,7 +47,8 @@ authRouter.post("/", loginSchema, async (req: Request, res: Response) => {
       { expiresIn: 3600 },
       (err, token) => {
         if (err) throw err;
-        res.send({ token });
+
+        res.send({ token, user });
       }
     );
   } catch (err) {

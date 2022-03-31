@@ -48,7 +48,7 @@ userRouter.post(
         { expiresIn: 3600 },
         (err, token) => {
           if (err) throw err;
-          return res.status(201).send({ token });
+          return res.status(201).send({ user: newUser, token });
         }
       );
     } catch (err) {

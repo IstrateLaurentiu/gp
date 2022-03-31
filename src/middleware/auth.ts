@@ -5,7 +5,7 @@ interface JwtPayload {
   user: Record<string,string>
 }
 export const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.header("x-auth-token");
+  const token = req.header("Authorization");
   if (!token) {
     return res.status(401).json({ msg: "No token; authorization denied" });
   }
