@@ -11,6 +11,8 @@ export type Profile = {
     description: string;
 }
 
+
+
 export type ReducerAction = {
     type: string;
     payload: any;
@@ -28,12 +30,13 @@ export enum Color {
     DARK_BLUE = '#2E3A8C',
     GREEN = '#3B755F',
     BEIGE = '#F2EBDB',
-    WHITE = '#FFFFFF',
+    WHITE = '#F9F9F9',
     BLACK = '#000000'
 }
 
 export type Post = {
-    user: User;
+    _id: string;
+    user: string;
     type: ProductType;
     amount: number;
     color: Color;
@@ -45,5 +48,6 @@ export enum DbTable {
     PROFILE = 'PROFILE',
     POSTS = 'POSTS'
 }
+    
 
 export type DbDTO = User | Profile | Post

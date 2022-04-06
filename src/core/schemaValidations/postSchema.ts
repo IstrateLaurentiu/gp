@@ -7,7 +7,8 @@ export const createPostSchemaValidation = [
     .isEmpty()
     .isIn(Object.values(ProductType)),
   check("amount", "Please include an amount").isNumeric(),
-  check("color", "Color does not match").isIn(Object.values(Color)),
+  check("color", "The selected color can't be used yet. Try green, beige or blue").isIn(Object.values(Color)),
+  check("isPublic","isPublic is not boolean").isBoolean()
 ];
 
 export const putPostSchemaValidation = [...createPostSchemaValidation, check("isPublic", "isPublic is undefined").isBoolean()];

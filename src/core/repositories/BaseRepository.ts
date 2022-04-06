@@ -48,17 +48,17 @@ export abstract class BaseRepository<T> implements IWrite<T>, IRead<T> {
   }
   async update(id: string, newItem: T): Promise<T> {
     try {
-     const modifiedItem =  await this._collection.findOneAndUpdate(
-        { _id: id },
-        {
-          ...newItem,
-        }
+      const update = { $set: { ...newItem } };
+
+      const modifiedItem = await this._collection.findByIdAndUpdate(
+        id,
+        update,
+        { returnOriginal: false }
       );
 
-      console.log('modified', modifiedItem)
       return modifiedItem as T;
     } catch (error) {
-        console.error(error)
+      console.error(error);
       throw new Error("Update Failed");
     }
   }

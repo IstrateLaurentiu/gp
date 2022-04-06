@@ -2,7 +2,7 @@ import { AppContextProvider } from "./context/AppContextProvider";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./components/Routing/PrivateRoute";
 import { Register } from "./components/Auth/Register";
-import { Private } from "./components/Private";
+import { Dashboard } from "./Pages/Dashboard/Dashboard";
 import { Login } from "./components/Auth/Login";
 import { Container } from "react-bootstrap";
 import { Navbar } from "./components/layout/navbar/Navbar";
@@ -20,7 +20,7 @@ function App() {
               path="/dashboard"
               element={
                 <ProtectedRoute>
-                  <Private />
+                  <Dashboard />
                 </ProtectedRoute>
               }
             />

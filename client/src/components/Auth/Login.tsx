@@ -3,26 +3,40 @@ import { http } from "../../services/http";
 import { Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
+import { Error } from "../Error/Error";
+import { axiosErrorHandler } from "../../utils/errorHandler";
+
 export const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState([]);
   const { setUser } = useContext(AppContext);
 
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setErrors([]);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
   const onSubmit = async (e: any) => {
     e.preventDefault();
-    http.post("/api/auth", formData).then((res) => {
-      localStorage.setItem("token", res.data.token);
-      setUser(res.data.user);
-      navigate("/dashboard");
-    });
+    http
+      .post("/api/auth", formData)
+      .then((res) => {
+        localStorage.setItem("token", res.data.token);
+        setUser(res.data.user);
+        navigate("/dashboard");
+      })
+      .catch(
+        axiosErrorHandler<any>((res) => {
+          if (res.type === "axios-error") {
+            setErrors(res.error.response?.data.errors);
+          }
+        })
+      );
   };
 
   return (
@@ -55,6 +69,8 @@ export const Login = () => {
       <div>
         Dont you have an account? <Link to="/register">Create one</Link>
       </div>
+
+      {errors?.length > 0 && <Error errors={errors}></Error>}
     </Form>
   );
 };

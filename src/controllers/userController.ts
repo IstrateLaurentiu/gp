@@ -5,6 +5,10 @@ import userSchemaValidation from "../core/schemaValidations/userSchema";
 import { validationResult } from "express-validator";
 import { UserRepository } from "../repositories/UserRepository";
 import { UserModel } from "../core/models";
+import {
+  buildSingleError,
+  ErrorBuilder,
+} from "../core/errorBuilder/ErrorBuilder";
 
 const userRouter = Router();
 const userRepository = new UserRepository(UserModel);
@@ -15,7 +19,9 @@ userRouter.post(
   async (req: Request, res: Response) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res
+        .status(400)
+        .json(new ErrorBuilder({ errors: errors.array() }).errorInstance);
     }
 
     const { name, email, password } = req.body;
@@ -24,7 +30,7 @@ userRouter.post(
       if (user) {
         return res
           .status(400)
-          .json({ errors: [{ msg: "User already exists" }] });
+          .json(buildSingleError("Email already registered"));
       }
 
       const salt = await bycrypt.genSalt(10);
@@ -53,7 +59,7 @@ userRouter.post(
       );
     } catch (err) {
       console.error(err);
-      res.status(500).send("Server error");
+      res.status(500).send(buildSingleError("Something went wrong"));
     }
   }
 );

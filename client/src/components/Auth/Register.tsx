@@ -3,6 +3,8 @@ import { http } from "../../services/http";
 import { Form, Button } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import AppContext from "../../context/AppContext";
+import { axiosErrorHandler } from "../../utils/errorHandler";
+import { Error } from "../Error/Error";
 export const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -10,10 +12,12 @@ export const Register = () => {
     password: "",
     confirmPassword: "",
   });
+  const [errors, setErrors] = useState([]);
   const { setUser } = useContext(AppContext);
   const navigate = useNavigate();
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setErrors([]);
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -30,7 +34,14 @@ export const Register = () => {
         localStorage.setItem("token", res.data.token);
         setUser(res.data.user);
         navigate("/dashboard");
-      });
+      })
+      .catch(
+        axiosErrorHandler<any>((res) => {
+          if (res.type === "axios-error") {
+            setErrors(res.error.response?.data.errors);
+          }
+        })
+      );
   };
 
   return (
@@ -84,6 +95,7 @@ export const Register = () => {
       <div>
         Already have an account? <Link to="/register">Login</Link>
       </div>
+      {errors?.length > 0 && <Error errors={errors}></Error>}
     </Form>
   );
 };

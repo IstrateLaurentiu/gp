@@ -1,47 +1,43 @@
 import { Fragment, useContext } from "react";
 import { Link } from "react-router-dom";
 import AppContext from "../../../context/AppContext";
+import {
+  StyledFlexContainer,
+  StyledNav,
+} from "./NavbarStyles";
+
 export const Navbar = () => {
   const { user, setUser } = useContext(AppContext);
 
   const authLinks = (
-    <ul>
-      <li>
-        <Link to="/dashboard">
-          <span className="hide-sm">Dashboard</span>
-        </Link>
-      </li>
-      <li>
-        <Link
-          onClick={() => {
-            localStorage.removeItem("token");
-            setUser();
-          }}
-          to="/login"
-        >
-          <span className="hide-sm">Logout</span>
-        </Link>
-      </li>
-    </ul>
+    <StyledFlexContainer>
+
+      <Link
+        onClick={() => {
+          localStorage.removeItem("token");
+          setUser();
+        }}
+        to="/login"
+      >
+        <span className="hide-sm">Logout</span>
+      </Link>
+    </StyledFlexContainer>
   );
 
   const guestLinks = (
-    <ul>
-      <li>
-        <Link to="/register">Register</Link>
-      </li>
-      <li>
-        <Link to="/login">Login</Link>
-      </li>
-    </ul>
+    <StyledFlexContainer>
+      <Link to="/register">Register</Link>
+
+      <Link to="/login">Login</Link>
+    </StyledFlexContainer>
   );
   return (
-    <nav className="navbar bg-dark">
-      <h1>
-        <Link to="/">Greenpark task</Link>
-      </h1>
+    <StyledNav>
+      <StyledFlexContainer>
+        <Link to="/dashboard">Greenspark task</Link>
+      </StyledFlexContainer>
 
       {<Fragment>{user ? authLinks : guestLinks}</Fragment>}
-    </nav>
+    </StyledNav>
   );
 };

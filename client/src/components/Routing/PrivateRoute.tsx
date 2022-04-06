@@ -12,9 +12,7 @@ export const ProtectedRoute = ({
   children,
   redirectPath = "/login",
 }: StateProps) => {
-  const { user, loading } = useContext(AppContext);
-
-  console.log('user in protected route', user, loading)
+  const { user } = useContext(AppContext);
 
   if (!user) {
     return <Navigate to={redirectPath} />;

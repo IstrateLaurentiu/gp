@@ -24,11 +24,15 @@ export const AppContextProvider = ({ children }: StateProps) => {
       setState({ ...state, loading: false });
       return;
     }
-    console.log("here");
-    http.get("/api/auth").then((res) => {
-      console.log("user", res.data);
-      setState({ ...state, loading: false, user: res.data });
-    });
+    http
+      .get("/api/auth")
+      .then((res) => {
+        setState({ ...state, loading: false, user: res.data });
+      })
+      .catch((error) => {
+        localStorage.removeItem("token");
+        setState({ ...state, loading: false, user: undefined });
+      });
   }, []);
 
   const contextValue = useMemo(
